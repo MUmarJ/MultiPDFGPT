@@ -135,19 +135,20 @@ def main():
         st.session_state.chat_history = None
     if "OPENAI_API_KEY" not in st.session_state:
         st.session_state.OPENAI_API_KEY = ""
-        if "OPEN_API_KEY" in os.environ:
-            st.session_state.OPENAI_API_KEY = os.environ.OPENAI_API_KEY
-            st.session_state.openAIKeyValid = is_api_key_valid()
-
     st.set_page_config(
         page_title="Multi PDF GPT",
         page_icon="🤖",
     )
     st.write(css, unsafe_allow_html=True)
     st.header("Multi PDF GPT with Umar! 🤖")
+    # st.write(f'Key found in environment variable: {os.environ["OPENAI_API_KEY"]}')
     keyContainer = st.empty()
     successContainer = st.empty()
-    if st.session_state.openAIKeyValid == False:
+    if "OPENAI_API_KEY" in os.environ:
+            st.session_state.OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+            with st.spinner("Validating..."):
+                st.session_state.openAIKeyValid = is_api_key_valid()
+    elif st.session_state.openAIKeyValid == False:
         try:
             st.session_state.OPENAI_API_KEY= keyContainer.text_input("Please enter your valid OpenAI key - This is not stored and reset on refresh!")
             with st.spinner("Validating..."):
