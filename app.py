@@ -14,7 +14,9 @@ import time
 
 def is_api_key_valid():
     openai.api_key = st.session_state.OPENAI_API_KEY
-    if openai.api_key != "":
+    if st.session_state.openAIKeyValid == True:
+        return True
+    elif st.session_state.openAIKeyValid == False and openai.api_key != "":
         try:
             response = openai.Completion.create(
                 engine="davinci",
@@ -50,7 +52,7 @@ def get_vectorstore(chunks, MODEL="OpenAI"):
 
     match MODEL:
         case "OpenAI":
-            embeddings = OpenAIEmbeddings()
+            embeddings = OpenAIEmbeddings(openai_api_key = st.session_state.OPENAI_API_KEY)
             placeholder.write("Using OpenAI Embeddings - ADA")
         case "Instructor":
             embeddings = HuggingFaceInstructEmbeddings(
@@ -72,7 +74,7 @@ def get_vectorstore(chunks, MODEL="OpenAI"):
 
 
 def get_conversation_chain(vectorestore):
-    llm = ChatOpenAI()
+    llm = ChatOpenAI(openai_api_key = st.session_state.OPENAI_API_KEY)
     conversation_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
         retriever=vectorestore.as_retriever(),
@@ -125,7 +127,8 @@ def load_page():
 
 def main():
     load_dotenv()
-    openAIKeyValid = False
+    if "openAIKeyValid" not in st.session_state:
+        st.session_state.openAIKeyValid = False
     if "conversation_chain" not in st.session_state:
         st.session_state.conversation_chain = None
     if "chat_history" not in st.session_state:
@@ -134,7 +137,7 @@ def main():
         st.session_state.OPENAI_API_KEY = ""
         if "OPEN_API_KEY" in os.environ:
             st.session_state.OPENAI_API_KEY = os.environ.OPENAI_API_KEY
-            openAIKeyValid = is_api_key_valid()
+            st.session_state.openAIKeyValid = is_api_key_valid()
 
     st.set_page_config(
         page_title="Multi PDF GPT",
@@ -144,22 +147,21 @@ def main():
     st.header("Multi PDF GPT with Umar! 🤖")
     keyContainer = st.empty()
     successContainer = st.empty()
-    if openAIKeyValid == False:
+    if st.session_state.openAIKeyValid == False:
         try:
             st.session_state.OPENAI_API_KEY= keyContainer.text_input("Please enter your valid OpenAI key - This is not stored and reset on refresh!")
             with st.spinner("Validating..."):
-                openAIKeyValid = is_api_key_valid()
-            if not openAIKeyValid:
+                st.session_state.openAIKeyValid = is_api_key_valid()
+            if st.session_state.openAIKeyValid == False:
                 st.session_state.OPENAI_API_KEY = ""
-                successContainer.warning(f"Valid OpenAI API Key found? {openAIKeyValid}")
+                successContainer.warning(f"Valid OpenAI API Key found? {st.session_state.openAIKeyValid}")
             else:
-                os.environ.OPENAI_API_KEY = st.session_state.OPENAI_API_KEY
                 successContainer.success("You are good to go!")
                 time.sleep(1)
-            # st.write(os.environ.OPENAI_API_KEY)
         except:
-            raise Exception("Please set the OPENAI_API_KEY environment variable")
-    if openAIKeyValid == True:
+            raise(Exception("Invalid OpenAI key!"))
+    if st.session_state.openAIKeyValid == True:
+        os.environ.OPENAI_API_KEY = st.session_state.OPENAI_API_KEY
         load_page()
         successContainer.empty()
         keyContainer.empty()
