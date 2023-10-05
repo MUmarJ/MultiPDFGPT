@@ -97,8 +97,8 @@ def load_page():
     question = st.text_input("Ask your question!")
     if question:
         handle_question(question)
-    st.write(user_template.replace("{{MSG}}", "Hello Bot"), unsafe_allow_html=True)
-    st.write(bot_template.replace("{{MSG}}", "Hi User!"), unsafe_allow_html=True)
+    # st.write(user_template.replace("{{MSG}}", "Hello Bot"), unsafe_allow_html=True)
+    # st.write(bot_template.replace("{{MSG}}", "Hi User!"), unsafe_allow_html=True)
 
     with st.sidebar:
         st.subheader("Documents")
