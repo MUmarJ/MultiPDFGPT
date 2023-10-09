@@ -15,8 +15,8 @@
     A Chat Bot using OpenAI to ask questions using your PDFs!
     <br />
     <br />
-    <!-- <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
-    ·
+     <a href="https://mumarj-multipdfgpt.streamlit.app/">Check it out online here! (OpenAI Key needed)</a>
+    <!--·
     <a href="https://github.com/othneildrew/Best-README-Template/issues">Report Bug</a>
     ·
     <a href="https://github.com/othneildrew/Best-README-Template/issues">Request Feature</a> -->
