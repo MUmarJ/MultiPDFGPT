@@ -12,6 +12,7 @@ from htmlTemplates import css, bot_template, user_template
 import openai
 import time
 
+
 def is_api_key_valid():
     openai.api_key = st.session_state.OPENAI_API_KEY
     if st.session_state.openAIKeyValid == True:
@@ -19,9 +20,7 @@ def is_api_key_valid():
     elif st.session_state.openAIKeyValid == False and openai.api_key != "":
         try:
             response = openai.Completion.create(
-                engine="davinci",
-                prompt="Hi",
-                max_tokens=1
+                engine="davinci", prompt="Hi", max_tokens=1
             )
         except:
             return False
@@ -52,7 +51,9 @@ def get_vectorstore(chunks, MODEL="OpenAI"):
 
     match MODEL:
         case "OpenAI":
-            embeddings = OpenAIEmbeddings(openai_api_key = st.session_state.OPENAI_API_KEY)
+            embeddings = OpenAIEmbeddings(
+                openai_api_key=st.session_state.OPENAI_API_KEY
+            )
             placeholder.write("Using OpenAI Embeddings - ADA")
         case "Instructor":
             embeddings = HuggingFaceInstructEmbeddings(
@@ -74,7 +75,7 @@ def get_vectorstore(chunks, MODEL="OpenAI"):
 
 
 def get_conversation_chain(vectorestore):
-    llm = ChatOpenAI(openai_api_key = st.session_state.OPENAI_API_KEY)
+    llm = ChatOpenAI(openai_api_key=st.session_state.OPENAI_API_KEY)
     conversation_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
         retriever=vectorestore.as_retriever(),
@@ -84,14 +85,21 @@ def get_conversation_chain(vectorestore):
     )
     return conversation_chain
 
+
 def handle_question(question):
     response = st.session_state.conversation_chain({"question": question})
     st.session_state.chat_history = response["chat_history"]
     for i, message in enumerate(st.session_state.chat_history):
-        if i%2 == 0:
-            st.write(user_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
+        if i % 2 == 0:
+            st.write(
+                user_template.replace("{{MSG}}", message.content),
+                unsafe_allow_html=True,
+            )
         else:
-            st.write(bot_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
+            st.write(
+                bot_template.replace("{{MSG}}", message.content), unsafe_allow_html=True
+            )
+
 
 def load_page():
     question = st.text_input("Ask your question!")
@@ -145,27 +153,32 @@ def main():
     keyContainer = st.empty()
     successContainer = st.empty()
     if "OPENAI_API_KEY" in os.environ:
-            st.session_state.OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
-            with st.spinner("Validating..."):
-                st.session_state.openAIKeyValid = is_api_key_valid()
+        st.session_state.OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+        with st.spinner("Validating..."):
+            st.session_state.openAIKeyValid = is_api_key_valid()
     elif st.session_state.openAIKeyValid == False:
         try:
-            st.session_state.OPENAI_API_KEY= keyContainer.text_input("Please enter your valid OpenAI key - This is not stored and reset on refresh!")
+            st.session_state.OPENAI_API_KEY = keyContainer.text_input(
+                "Please enter your valid OpenAI key - This is not stored and reset on refresh!"
+            )
             with st.spinner("Validating..."):
                 st.session_state.openAIKeyValid = is_api_key_valid()
             if st.session_state.openAIKeyValid == False:
                 st.session_state.OPENAI_API_KEY = ""
-                successContainer.warning(f"Valid OpenAI API Key found? {st.session_state.openAIKeyValid}")
+                successContainer.warning(
+                    f"Valid OpenAI API Key found? {st.session_state.openAIKeyValid}"
+                )
             else:
                 successContainer.success("You are good to go!")
                 time.sleep(1)
         except:
-            raise(Exception("Invalid OpenAI key!"))
+            raise (Exception("Invalid OpenAI key!"))
     if st.session_state.openAIKeyValid == True:
         os.environ.OPENAI_API_KEY = st.session_state.OPENAI_API_KEY
         load_page()
         successContainer.empty()
         keyContainer.empty()
+
 
 if __name__ == "__main__":
     main()
