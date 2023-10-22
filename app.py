@@ -148,7 +148,7 @@ def main():
         page_icon="🤖",
     )
     st.write(css, unsafe_allow_html=True)
-    st.header("Multi PDF GPT with Umar! 🤖")
+    st.header("Multi PDF GPT 🤖")
     # st.write(f'Key found in environment variable: {os.environ["OPENAI_API_KEY"]}')
     keyContainer = st.empty()
     successContainer = st.empty()
