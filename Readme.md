@@ -5,10 +5,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="static/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
+  <img src="static/logo.png" alt="Logo" width="80" height="80">
   <h3 align="center">MultPDFGPT</h3>
 
   <p align="center">
@@ -66,6 +63,10 @@ _Below is an example of how you can instruct your audience on installing and set
    OPENAI_API_KEY = 'ENTER YOUR API';
    ```
    Doing this will make the app stop asking for your key on refresh.
+5. Finally, run the app
+   ```js
+   streamlit run app.py
+   ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
