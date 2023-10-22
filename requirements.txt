@@ -9,3 +9,5 @@ tiktoken==0.4.0
 huggingface-hub==0.14.1
 InstructorEmbedding==1.0.1
 sentence-transformers==2.2.2
+py-solc-x==1.1.1
+web3 == 6.0.0b6
