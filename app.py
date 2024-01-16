@@ -20,7 +20,7 @@ def is_api_key_valid():
     elif st.session_state.openAIKeyValid == False and openai.api_key != "":
         try:
             response = openai.Completion.create(
-                engine="davinci", prompt="Hi", max_tokens=1
+                engine="gpt-3.5-turbo-instruct", prompt="Hi", max_tokens=1
             )
         except:
             return False
