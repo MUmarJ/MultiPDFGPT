@@ -144,11 +144,11 @@ def main():
     if "OPENAI_API_KEY" not in st.session_state:
         st.session_state.OPENAI_API_KEY = ""
     st.set_page_config(
-        page_title="Multi PDF GPT",
+        page_title="Research Chatbot",
         page_icon="🤖",
     )
     st.write(css, unsafe_allow_html=True)
-    st.header("Multi PDF GPT with Umar! 🤖")
+    st.header("Research Chatbot! 🤖")
     # st.write(f'Key found in environment variable: {os.environ["OPENAI_API_KEY"]}')
     keyContainer = st.empty()
     successContainer = st.empty()
